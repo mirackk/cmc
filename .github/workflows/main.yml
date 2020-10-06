@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      
+      - run: npm install web3
+      
+      - run: OUTFILE='cmc.json' INFURA='https://mainnet.infura.io/v3/26fe69fa8c0b41089a4c0f31789eece6' node cmc.js
+      
+      - run: |
+          git config --global user.email "flamincome@protonmail.com"
+          git config --global user.name "flamincome"
+          git remote add action https://${{ secrets.GITHUB_TOKEN }}@github.com/flamincome/cmc.git
+          git checkout -b release
+          git add cmc.json
+          git commit -m "release"
+          git push action release -f
