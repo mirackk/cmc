@@ -66,7 +66,7 @@ let func = async function () {
 
     for (var symbol of F.keys()) {
         let vault = flamincome.__get_vault_by_symbol__(symbol)
-        console.log(symbol)//1
+        //console.log(symbol)//1
         await new Promise(res => {
             web3.eth.getBlockNumber().then(async (num) => {
                 let nl = num - 10000
@@ -79,7 +79,7 @@ let func = async function () {
                 pl = parseFloat(pl)
                 pr = parseFloat(pr)
                 let apy = (((pr / pl) ** (31557600 / duration) - 1) * 100).toFixed(2)
-                console.log(apy)//2
+                //console.log(apy)//2
                 tmp.set(symbol, apy)
                 // Promise.all([bl, br]).then(([bl, br]) => {
                 //     let duration = br.timestamp - bl.timestamp
@@ -94,21 +94,21 @@ let func = async function () {
                 //     })
                 // })
             }).catch(err => {
-                console.log(err)
+                //console.log(err)
             }).finally(() => {
-                console.log('emit res')//3
+                //console.log('emit res')//3
                 res();
             })
 
         })
-        console.log('next trick')//4
+        //console.log('next trick')//4
 
     }
 
 
     const APY = tmp
-    console.log("result is")
-    console.log(APY)
+    //console.log("result is")
+    //console.log(APY)
     Promise.all([...U].map(([k, v]) => new Promise(resolve => {
         if (k.startsWith('UNI-V2')) {
             const url = 'https://api.coinmarketcap.com/data-api/v3/farming/yield/latest'
