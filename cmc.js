@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Web3 = require("web3");
 const request = require('request');
+const fetch = require('node-fetch');
 const web3 = new Web3(new Web3.providers.HttpProvider(process.env.INFURA));
 const URLAPY = 'https://flamincome-tlv-pubsub.herokuapp.com/apy'
 const ABI = [{ "inputs": [], "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "owner", "type": "address" }, { "indexed": true, "internalType": "address", "name": "spender", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "value", "type": "uint256" }], "name": "Approval", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "from", "type": "address" }, { "indexed": true, "internalType": "address", "name": "to", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "value", "type": "uint256" }], "name": "Transfer", "type": "event" }, { "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }, { "internalType": "address", "name": "spender", "type": "address" }], "name": "allowance", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "spender", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "approve", "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "available", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "balance", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "account", "type": "address" }], "name": "balanceOf", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "controller", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "decimals", "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "spender", "type": "address" }, { "internalType": "uint256", "name": "subtractedValue", "type": "uint256" }], "name": "decreaseAllowance", "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "deposit", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "depositAll", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "earn", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "governance", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "reserve", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "harvest", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "spender", "type": "address" }, { "internalType": "uint256", "name": "addedValue", "type": "uint256" }], "name": "increaseAllowance", "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "max", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "min", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "name", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "priceE18", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "_controller", "type": "address" }], "name": "setController", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "_governance", "type": "address" }], "name": "setGovernance", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_min", "type": "uint256" }], "name": "setMin", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "symbol", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "token", "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "totalSupply", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "recipient", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "transfer", "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "sender", "type": "address" }, { "internalType": "address", "name": "recipient", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "transferFrom", "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_shares", "type": "uint256" }], "name": "withdraw", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "withdrawAll", "outputs": [], "stateMutability": "nonpayable", "type": "function" }]
@@ -19,14 +20,95 @@ const F = new Map([
 const CU = new Map([...U].map(([k, v]) => [k, new web3.eth.Contract(ABI, v)]))
 const CF = new Map([...F].map(([k, v]) => [k, new web3.eth.Contract(ABI, v)]))
 
-request(URLAPY, function (error, response, body) {
-    if (error) {
-        throw error
+
+let flamincome = {
+    __init__: function () {
+        try {
+            window.web3 = new Web3(web3.currentProvider)
+        } catch {
+        }
+        fetch('https://cdn.jsdelivr.net/gh/flamincome/registry/abi/vault.baseline.json').then(resp => resp.text()).then(text => {
+            flamincome.__abi__.vault_baseline = JSON.parse(text)
+            //console.log('flamincome.__abi__.vault_baseline  is')
+            //console.log(flamincome.__abi__.vault_baseline)
+        }).catch(err => {
+            console.log(err)
+            setTimeout(flamincome.__init__, 1000)
+        })
+        fetch('https://cdn.jsdelivr.net/gh/flamincome/registry/address/vault.json').then(resp => resp.text()).then(text => {
+            flamincome.__registry__.vault = JSON.parse(text)
+            //console.log('flamincome.__registry__.vault  is')
+            //console.log(flamincome.__registry__.vault)
+        }).catch(err => {
+            console.log(err)
+            setTimeout(flamincome.__init__, 1000)
+        })
+    },
+    __abi__: {},
+    __registry__: {},
+    __get_vault_by_symbol__: function (symbol) {
+        //console.log((flamincome.__registry__))
+        let vault = flamincome.__registry__.vault[symbol]
+        if (!vault) {
+            throw { message: `canout find registry '${symbol}'` }
+        }
+        return new web3.eth.Contract(flamincome.__abi__.vault_baseline, vault)
     }
-    if (response.statusCode != 200) {
-        throw response
+}
+
+
+let func = async function () {
+    flamincome.__init__()
+    await new Promise(res => {
+        setTimeout(function () { res() }, 10000)
+    })
+    var tmp = new Map()
+
+    for (var symbol of F.keys()) {
+        let vault = flamincome.__get_vault_by_symbol__(symbol)
+        console.log(symbol)//1
+        await new Promise(res => {
+            web3.eth.getBlockNumber().then(async (num) => {
+                let nl = num - 10000
+                let nr = num
+                let bl = await web3.eth.getBlock(nl)
+                let br = await web3.eth.getBlock(nr)
+                let duration = br.timestamp - bl.timestamp
+                let pl = await vault.methods.priceE18().call({}, nl)
+                let pr = await vault.methods.priceE18().call({}, nr)
+                pl = parseFloat(pl)
+                pr = parseFloat(pr)
+                let apy = (((pr / pl) ** (31557600 / duration) - 1) * 100).toFixed(2)
+                console.log(apy)//2
+                tmp.set(symbol, apy)
+                // Promise.all([bl, br]).then(([bl, br]) => {
+                //     let duration = br.timestamp - bl.timestamp
+                //     let pl = vault.methods.priceE18().call({}, nl)
+                //     let pr = vault.methods.priceE18().call({}, nr)
+                //     Promise.all([pl, pr]).then(([pl, pr]) => {
+                //         pl = parseFloat(pl)
+                //         pr = parseFloat(pr)
+                //         let apy = (((pr / pl) ** (31557600 / duration) - 1) * 100).toFixed(2)
+                //         console.log(apy)//2
+                //         tmp.set(symbol, apy)
+                //     })
+                // })
+            }).catch(err => {
+                console.log(err)
+            }).finally(() => {
+                console.log('emit res')//3
+                res();
+            })
+
+        })
+        console.log('next trick')//4
+
     }
-    const APY = new Map(JSON.parse(body).map(v => [v.token.toUpperCase(), v.percentageAPY]))
+
+
+    const APY = tmp
+    console.log("result is")
+    console.log(APY)
     Promise.all([...U].map(([k, v]) => new Promise(resolve => {
         if (k.startsWith('UNI-V2')) {
             const url = 'https://api.coinmarketcap.com/data-api/v3/farming/yield/latest'
@@ -100,6 +182,6 @@ request(URLAPY, function (error, response, body) {
                 }),
             }
         }).then(json => fs.writeFileSync(process.env.OUTFILE, JSON.stringify(json, "", "\t")))
-})
+}
 
-
+func();
